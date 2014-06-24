@@ -139,6 +139,33 @@ func TestMangleURL(t *testing.T) {
 		t.Error("unexpected url:", u)
 	}
 
+	// ssh without .git
+	u, err = MangleURL("git@github.com:username/repo")
+	if err != nil {
+		t.Error("error should be nil:", err)
+	}
+	if u != expected {
+		t.Error("unexpected url:", u)
+	}
+
+	// ssh2
+	u, err = MangleURL("ssh://git@github.com/username/repo.git")
+	if err != nil {
+		t.Error("error should be nil:", err)
+	}
+	if u != expected {
+		t.Error("unexpected url:", u)
+	}
+
+	// ssh2 without .git
+	u, err = MangleURL("ssh://git@github.com/username/repo")
+	if err != nil {
+		t.Error("error should be nil:", err)
+	}
+	if u != expected {
+		t.Error("unexpected url:", u)
+	}
+
 	// https
 	u, err = MangleURL("https://github.com/username/repo.git")
 	if err != nil {
@@ -148,8 +175,26 @@ func TestMangleURL(t *testing.T) {
 		t.Error("unexpected url:", u)
 	}
 
+	// https without .git
+	u, err = MangleURL("https://github.com/username/repo")
+	if err != nil {
+		t.Error("error should be nil:", err)
+	}
+	if u != expected {
+		t.Error("unexpected url:", u)
+	}
+
 	// git
 	u, err = MangleURL("git://github.com/username/repo.git")
+	if err != nil {
+		t.Error("error should be nil:", err)
+	}
+	if u != expected {
+		t.Error("unexpected url:", u)
+	}
+
+	// git without .git
+	u, err = MangleURL("git://github.com/username/repo")
 	if err != nil {
 		t.Error("error should be nil:", err)
 	}

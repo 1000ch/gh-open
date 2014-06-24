@@ -64,11 +64,11 @@ func DetectRemote(dir string) ([]*Remote, error) {
 //   - git@bitbucket.org:username/repo.git //same github
 //   - https://username@bitbucket.org/username/repo.git //diffrent github
 func MangleURL(url string) (string, error) {
-	ssh_re := regexp.MustCompile(`^git@(.*?):(.*?)/(.*?)\.git$`)
-	ssh2_re := regexp.MustCompile(`^ssh://git@(.*?)/(.*?)/(.*?)\.git$`)
-	https_re := regexp.MustCompile(`^https://(.*?)/(.*?)/(.*?)(?:.git)?$`)
-	https2_re := regexp.MustCompile(`^https://.*@(.*?)/(.*?)/(.*?)(?:.git)?$`)
-	git_re := regexp.MustCompile(`^git://(.*?)/(.*?)/(.*?).git$`)
+	ssh_re := regexp.MustCompile(`^git@(.*?):(.*?)/(.*?)(?:\.git)?$`)
+	ssh2_re := regexp.MustCompile(`^ssh://git@(.*?)/(.*?)/(.*?)(?:\.git)?$`)
+	https_re := regexp.MustCompile(`^https://(.*?)/(.*?)/(.*?)(?:\.git)?$`)
+	https2_re := regexp.MustCompile(`^https://.*@(.*?)/(.*?)/(.*?)(?:\.git)?$`)
+	git_re := regexp.MustCompile(`^git://(.*?)/(.*?)/(.*?)(?:\.git)?$`)
 
 	var matches []string
 
