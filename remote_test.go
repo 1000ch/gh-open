@@ -1,7 +1,7 @@
 package main
 
 import (
-	"io/ioutil"
+	"os"
 	"os/exec"
 	"regexp"
 	"syscall"
@@ -9,14 +9,13 @@ import (
 )
 
 func TestDetectRemote_NotGit(t *testing.T) {
-	dir, err := ioutil.TempDir("", "")
+	dir, err := os.MkdirTemp("", "")
 	if err != nil {
 		t.Error("failed to create tempdir:", err)
 	}
 	defer syscall.Rmdir(dir)
 
 	remotes, err := DetectRemote(dir)
-
 	if remotes != nil {
 		t.Error("unexpected result:", remotes)
 	}
@@ -31,14 +30,13 @@ func TestDetectRemote_NotGit(t *testing.T) {
 }
 
 func TestDetectRemote_NotFound(t *testing.T) {
-	dir, err := ioutil.TempDir("", "")
+	dir, err := os.MkdirTemp("", "")
 	if err != nil {
 		t.Error("failed to create tempdir:", err)
 	}
 	defer syscall.Rmdir(dir)
 
 	remotes, err := DetectRemote(dir + "/not_found")
-
 	if remotes != nil {
 		t.Error("unexpected result:", remotes)
 	}
@@ -53,7 +51,7 @@ func TestDetectRemote_NotFound(t *testing.T) {
 }
 
 func TestDetectRemote(t *testing.T) {
-	dir, err := ioutil.TempDir("", "")
+	dir, err := os.MkdirTemp("", "")
 	if err != nil {
 		t.Error("failed to create tempdir:", err)
 	}
@@ -72,15 +70,12 @@ func TestDetectRemote(t *testing.T) {
 	}
 
 	remotes, err := DetectRemote(dir)
-
 	if err != nil {
 		t.Error("error should be nil:", err)
 	}
-
 	if len(remotes) < 1 {
 		t.Error("unexpected remotes count")
 	}
-
 	if remotes[0].Name != "origin" {
 		t.Error("unexpected remote name", remotes[0].Name)
 	}
@@ -89,9 +84,9 @@ func TestDetectRemote(t *testing.T) {
 	}
 }
 
-//   - git@bitbucket.org:username/repo.git
+// - git@bitbucket.org:username/repo.git
 func TestDetectRemoteForBitBucket(t *testing.T) {
-	dir, err := ioutil.TempDir("", "")
+	dir, err := os.MkdirTemp("", "")
 	if err != nil {
 		t.Error("failed to create tempdir:", err)
 	}
@@ -110,15 +105,12 @@ func TestDetectRemoteForBitBucket(t *testing.T) {
 	}
 
 	remotes, err := DetectRemote(dir)
-
 	if err != nil {
 		t.Error("error should be nil:", err)
 	}
-
 	if len(remotes) < 1 {
 		t.Error("unexpected remotes count")
 	}
-
 	if remotes[0].Name != "origin" {
 		t.Error("unexpected remote name", remotes[0].Name)
 	}
@@ -253,5 +245,4 @@ func TestMangleURLforBitBucket(t *testing.T) {
 	if u != expected {
 		t.Error("unexpected url:", u)
 	}
-
 }
