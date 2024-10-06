@@ -119,6 +119,41 @@ func TestDetectRemoteForBitBucket(t *testing.T) {
 	}
 }
 
+// - git@gitlab.com:username/repo.git
+func TestDetectRemoteForGitLab(t *testing.T) {
+	dir, err := os.MkdirTemp("", "")
+	if err != nil {
+		t.Error("failed to create tempdir:", err)
+	}
+	defer syscall.Rmdir(dir)
+
+	git := exec.Command("git", "init")
+	git.Dir = dir
+	if err := git.Run(); err != nil {
+		t.Error("failed to run git init:", err)
+	}
+
+	git = exec.Command("git", "remote", "add", "origin", "git@gitlab.com:username/repo.git")
+	git.Dir = dir
+	if err := git.Run(); err != nil {
+		t.Error("failed to run git remote add :", err)
+	}
+
+	remotes, err := DetectRemote(dir)
+	if err != nil {
+		t.Error("error should be nil:", err)
+	}
+	if len(remotes) < 1 {
+		t.Error("unexpected remotes count")
+	}
+	if remotes[0].Name != "origin" {
+		t.Error("unexpected remote name", remotes[0].Name)
+	}
+	if remotes[0].Url != "git@gitlab.com:username/repo.git" {
+		t.Error("unexpected remote url", remotes[0].Url)
+	}
+}
+
 func TestMangleURL(t *testing.T) {
 	expected := "https://github.com/username/repo"
 
